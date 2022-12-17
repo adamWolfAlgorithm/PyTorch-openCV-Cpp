@@ -2,18 +2,15 @@ cmake_minimum_required(VERSION 3.14)
 
 project (PyTorch-openCV-Cpp)
 
+set(CMAKE_PREFIX_PATH /usr/lib/x86_64-linux-gnu)
+
 find_package (Torch REQUIRED)
 
-add_executable(PyTorch-openCV-Cpp main.cpp )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
-target_link_libraries(PyTorch-openCV-Cpp "${TORCH_LIBRARIES}")
+add_executable(${PROJECT_NAME} main.cpp )
 
-if (MSVC)
-  file(GLOB TORCH_DLLS "${TORCH_INSTALL_PREFIX}/lib/*.dll")
-  add_custom_command(TARGET PyTorch-openCV-Cpp
-                     POST_BUILD
-                     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                     ${TORCH_DLLS}
-                     $<TARGET_FILE_DIR:PyTorch-openCV-Cpp>)
-endif (MSVC)
+target_link_libraries(${PROJECT_NAME} "${TORCH_LIBRARIES}")
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
 
